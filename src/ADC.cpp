@@ -27,7 +27,7 @@ ISR(ADC_vect)
             }
             break;
         case 1: // датчик тока
-            
+            // ((ADC * 5) / 1024) - 2.5) / 185 mV = Icurrent    
             __ADC::set_channel(__ADC::ADC_Channel::ADC0);
             break;
     }

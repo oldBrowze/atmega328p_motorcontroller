@@ -3,8 +3,12 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-namespace EXT_INT
+class EXT_INT
 {
-    bool blocked_control = false; // Если флаг взведен, реакции на потенциометр нет. 
-    void init();
+private:
+    EXT_INT() = delete;
+public: 
+    static volatile bool blocked_control; // Если флаг взведен, реакции на потенциометр нет. 
+    static volatile uint16_t count_interrupt; // количество оборотов, который засек датчик
+    static void init();
 };

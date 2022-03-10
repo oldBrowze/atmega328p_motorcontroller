@@ -4,17 +4,16 @@
 #include <avr/interrupt.h>
 
 #include "ADC.hpp"
-#include "PWM.hpp"
+#include "TIM.hpp"
 #include "EXT_INT.hpp"
-
 
 int main()
 {
     sei();
     
     __ADC::init();
-    __PWM::port_init();
-    __PWM::init();
+    TIM::port_init();
+    TIM::timer_init();
     EXT_INT::init();
 
  

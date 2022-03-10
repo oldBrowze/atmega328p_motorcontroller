@@ -1,5 +1,8 @@
 #include "EXT_INT.hpp"
 
+volatile bool EXT_INT::blocked_control = false; 
+volatile uint16_t EXT_INT::count_interrupt = 0;
+
 void EXT_INT::init()
 {
     /*
@@ -20,17 +23,16 @@ ISR(INT0_vect)
 /*
     Прерывание по низкому сигналу оптического датчика
 */
-    
+    EXT_INT::count_interrupt++;
 }
 
 ISR(INT1_vect)
 {
-    using namespace EXT_INT;
     /*
     Прерывание по изменению FAULT
     Отключаем работу ШИМ
     */
-    if(blocked_control == false)
+    if(EXT_INT::blocked_control == false)
         OCR1A = 0;
         
     EXT_INT::blocked_control = !EXT_INT::blocked_control;

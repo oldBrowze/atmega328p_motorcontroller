@@ -22,7 +22,7 @@ public:
         ADC6,
         ADC7
     };
-
+    
     static void init();
     static inline void set_channel(const ADC_Channel& channel)
     {
