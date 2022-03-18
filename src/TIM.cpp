@@ -1,6 +1,6 @@
 #include "TIM.hpp"
 #include "EXT_INT.hpp"
-#include "SETTINGS.hpp"
+
 
 void TIM::timer_init()
 {
@@ -20,7 +20,7 @@ void TIM::timer_init()
    
     //настройка таймера 2
    
-    OCR3A = 15626;
+    OCR2A = 243;
     /*
     Время, через которое вызовется прерывание, определится:
     t = resolution / (OCR3A + 1)
@@ -28,17 +28,18 @@ void TIM::timer_init()
     (OCR3A + 1) = 1s / (1 * prescale / F_CPU) = 15626
     OCR3A = 15626 - 1 = 15625.
     */
-    TCCR3A = (0b00 << COM3B0) |                             // порты отключены
-                (0b100 << WGM30);                           // режим CTC, до OCR3A
-    TCCR3B = (0b101 << CS30);                               // коэфф. деления - 1024
-    TIMSK3 = (0b1 << OCIE3A);                               // прерывание по совпадению
+    TCCR2A = (0b00 << COM2B0) |                             // порты отключены
+                (0b100 << WGM20);                           // режим CTC, до OCR3A
+    TCCR2B = (0b101 << CS20);                               // коэфф. деления - 1024
+    TIMSK2 = (0b1 << OCIE2A);                               // прерывание по совпадению
 
 }
 
 
-ISR(TIMER3_COMPA_vect) // вызов каждую секунду
+ISR(TIMER2_COMPA_vect) // вызов каждую секунду
 {
-    if(EXT_INT::count_interrupt * KOEFFICIENT_OF_SPEED < 5) //изменить на ожидаемое кол-во оборотов при N-ом напряжении
+    static uint8_t _count_interrupt = 0;
 
-    EXT_INT::count_interrupt = 0;
+    if(++_count_interrupt == 32)    //обнуляем
+        EXT_INT::count_interrupt = 0;
 }

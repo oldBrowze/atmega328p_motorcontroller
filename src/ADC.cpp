@@ -23,13 +23,15 @@ ISR(ADC_vect)
             if(EXT_INT::blocked_control == false)
             {
                 OCR1A = ADC;                // считываем результаты с АЦП
-                __ADC::set_channel(__ADC::ADC_Channel::ADC1);
+                //__ADC::set_channel(__ADC::ADC_Channel::ADC1);
             }
             break;
+        /*
         case 1: // датчик тока
             // ((ADC * 5) / 1024) - 2.5) / 185 mV = Icurrent    
             __ADC::set_channel(__ADC::ADC_Channel::ADC0);
             break;
+        */
     }
     ADCSRA |= (1 << ADSC);      // начинаем след. преобразование
 }
