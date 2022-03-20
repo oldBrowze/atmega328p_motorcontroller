@@ -38,12 +38,12 @@ ISR(PCINT0_vect)
 
     if((PINB & (1 << PB4)) == false) //stop
     {
-        SerialPort::write('g'); 
+        SerialPort::write(static_cast<unsigned char>('g')); 
         PORTD ^= (1 << PD5);
     }
     else if((PINB & (1 << PB5)) == false) //reverse
     {
-        SerialPort::write('j');
+        SerialPort::write(static_cast<unsigned char>('j'));
         PORTD ^= (1 << PD6);
     }
     //++_int_cnt;
@@ -77,7 +77,7 @@ ISR(INT0_vect)
     Прерывание по низкому сигналу оптического датчика
 */
     EXT_INT::count_interrupt++;
-    SerialPort::write(0xC);
+    SerialPort::write(static_cast<unsigned char>('C'));
 }
 
 ISR(INT1_vect)

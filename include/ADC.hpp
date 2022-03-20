@@ -10,25 +10,9 @@ class ADC_Operations
 {
 private:
     ADC_Operations() = delete;
-public:
-    enum ADC_Channel : const uint8_t
-    {
-        ADC0 = 0x00,
-        ADC1,
-        ADC2,
-        ADC3,
-        ADC4,
-        ADC5,
-        ADC6,
-        ADC7
-    };
-    
+public:    
     static void init();
-    static inline void set_channel(const ADC_Channel& channel)
-    {
-        //if(channel > 0b111) return;
-        ADMUX = channel;
-    }
+    static uint16_t get_result(const uint8_t);
     [[deprecated]]
     static inline const volatile uint8_t get_channel()
     {
