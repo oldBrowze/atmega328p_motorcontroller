@@ -1,5 +1,6 @@
 #include "TIM.hpp"
 #include "EXT_INT.hpp"
+#include "Serial.hpp"
 
 
 void TIM::timer_init()
@@ -42,6 +43,8 @@ ISR(TIMER2_COMPA_vect) // вызов каждую секунду
     static uint8_t _count_interrupt = 0;
 
     if(++_count_interrupt == 32)    //обнуляем
+    {
+        SerialPort::write(static_cast<uint16_t>(EXT_INT::count_interrupt / 12));
         EXT_INT::count_interrupt = 0;
-    
+    }
 }

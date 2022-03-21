@@ -1,6 +1,6 @@
 #include "Serial.hpp"
 
-void SerialPort::write(const unsigned char message)
+void SerialPort::write(const uint8_t message)
 {
     while(!(UCSR0A & (1 << UDRE0)));
 
@@ -32,10 +32,12 @@ void SerialPort::write(const volatile uint16_t value)
     while(!(UCSR0A & (1 << UDRE0)));
     UDR0 = static_cast<uint8_t>(value & 0xFF);
 
+    /*
     while(!(UCSR0A & (1 << UDRE0)));
     UDR0 = '\n';
     while(!(UCSR0A & (1 << UDRE0)));
     UDR0 = '\r';
+    */
 }
 
 void SerialPort::connect()

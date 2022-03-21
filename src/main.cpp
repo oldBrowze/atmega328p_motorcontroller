@@ -9,7 +9,7 @@
 #include "EXT_INT.hpp"
 
 #include "Serial.hpp"
-
+#include "SETTINGS.hpp"
 
 int main()
 {
@@ -26,7 +26,7 @@ int main()
     while(true) 
     {
         OCR1A = __ADC::get_result(0x0);
-        SerialPort::write(__ADC::get_result(0x1));
+        SerialPort::write((__ADC::get_result(0x1)));
     }
 
     return 0;
