@@ -5,12 +5,12 @@ void SerialPort::write(const uint8_t message)
     while(!(UCSR0A & (1 << UDRE0)));
 
     UDR0 = message;
-
+/*
     while(!(UCSR0A & (1 << UDRE0)));
     UDR0 = '\n';
     while(!(UCSR0A & (1 << UDRE0)));
     UDR0 = '\r';
-
+*/
     //nop!
 }
 void SerialPort::write(const unsigned char message[], const __SIZE_TYPE__ &size)

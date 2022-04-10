@@ -12,6 +12,7 @@ private:
     Timer_Operations() = delete;
 
 public:
+    static volatile inline uint16_t _counter_interrupt = 0;
     static void timer_init();
     static inline void port_init()
     {

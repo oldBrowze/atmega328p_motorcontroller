@@ -1,50 +1,55 @@
 #include "TIM.hpp"
 #include "EXT_INT.hpp"
 #include "Serial.hpp"
+#include "ADC.hpp"
+#include "common.hpp"
 
+//#define __DEBUG__ENABLE 
 
 void TIM::timer_init()
 {
     //настройка таймера 1
+    //TCCR1A = 0;
     TCCR1A = (1 << COM1A1) | 
                 (0 << COM1A0) |                             // non-inverting mode fast pwm
                 (1 << WGM12) | 
-                (1 << WGM11) | 
-                (1 << WGM10);                               // Fast PWM 10-bit(as ADC resolution)
+                (1 << WGM11) |
+                (1 << WGM10);     
 
-    TCCR1B = (1 << CS10);                                   // Частота без предделителя     
-/*
-    Частота таймера: f = F_CPU / (1 * 2^resolution_PWM) = 15.625 kHz
+    TCCR1B = 0x1;                                           // Частота без предделителя     
 
-*/
-    OCR1A = 512;
-   
-    //настройка таймера 2
-   
-    OCR2A = 243;
+#ifdef __DEBUG__ENABLE 
     /*
-    Время, через которое вызовется прерывание, определится:
-    t = resolution / (OCR3A + 1)
-    (OCR3A + 1) = t / resolution
-    (OCR3A + 1) = 1s / (1 * prescale / F_CPU) = 15626
-    OCR3A = 15626 - 1 = 15625.
+    Каждые 5 сек. Считалось по даташиту для режима CTC
     */
-    TCCR2A = (0b00 << COM2B0) |                             // порты отключены
-                (0b100 << WGM20);                           // режим CTC, до OCR3A
-    TCCR2B = (0b101 << CS20);                               // коэфф. деления - 1024
-    TIMSK2 = (0b1 << OCIE2A);                               // прерывание по совпадению
+    //настройка таймера 2
+    OCR0A = 255;
+    TCCR0A = (0b100 << WGM01);                              // режим CTC, до OCR0A
+    TCCR0B = (0b101 << CS00);                               // коэфф. деления - 1024
+    TIMSK0 = (0b1 << OCIE0A);                             // прерывание по совпадению
+
 
 }
 
-
-ISR(TIMER2_COMPA_vect) // вызов каждую секунду
+//тестбенч для составления графиков
+ISR(TIMER0_COMPA_vect) // вызов каждую секунду(32)
 {
-    
-    static uint8_t _count_interrupt = 0;
-
-    if(++_count_interrupt == 32)    //обнуляем
+    if(++TIM::_counter_interrupt == 305)    //обнуляем
     {
-        SerialPort::write(static_cast<uint16_t>(EXT_INT::count_interrupt / 12));
+        //SerialPort::write(EXT_INT::count_interrupt);
+        
+        if(index < 21)
+        {
+            array_speed[index] = EXT_INT::count_interrupt;
+            OCR1A = OCR1A + 50;
+            ++index;
+        }
+        else
+            is_blocked = true;
+        TIM::_counter_interrupt = 0;
         EXT_INT::count_interrupt = 0;
     }
 }
+#else
+}
+#endif
