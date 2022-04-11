@@ -9,10 +9,10 @@ void EXT_INT::init()
 {
     /*
         Используемые порты: 
-        1. PD2 - INT0   - внешнее прерывание от оптического датчика
-        2. PD3 - INT1   - внешнее прерывание от выхода Pololu FAULT
-        3. PB4 - PCINT4 - прерывание от кнопки Start/Stop
-        4. PB5 - PCINT5 - прерывание от кнопки reverse
+        1. PD2 - INT0   - внешнее прерывание от кнопки_1
+        2. PD3 - INT1   - внешнее прерывание от кнопки_2
+        3. PB4 - PCINT4 - внешнее прерывание от оптического датчика
+        4. PB5 - PCINT5 - внешнее прерывание от выхода Pololu FAULT -unused
     */
     EICRA   =   (0b10 << ISC00) | (0b10 << ISC10);  // спадающий фронт на ноге PD2, PD3
     EIMSK   =   (1 << INT0) | (1 << INT1);          // включаем внешнее прерывание
@@ -34,18 +34,15 @@ void EXT_INT::init()
 ISR(PCINT0_vect)
 {
     if((PINB & (1 << PB4)) == false)
-        //SerialPort::write(static_cast<uint8_t>(0xC)); 
-    ++EXT_INT::count_interrupt;
+        ++EXT_INT::count_interrupt;                 // считаем количество прохода энкодерного диска через фотопрерыватель
 }
 
 ISR(INT0_vect)
 {
-    SerialPort::write(static_cast<uint8_t>(0xE)); 
-    PORTD ^= (1 << PD5);
+    PORTD ^= (1 << PD5);                            // дергаем DIR
 }
 
 ISR(INT1_vect)
 {
-    SerialPort::write(static_cast<uint8_t>(0xD)); 
-    PORTD ^= (1 << PD6);
+    PORTD ^= (1 << PD6);                            // дергаем EN(enable, start/stop)
 }

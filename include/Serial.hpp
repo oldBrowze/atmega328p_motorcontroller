@@ -3,6 +3,10 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+/*
+    Для общения с ПК для дебага.
+    В основной код не входит
+*/
 class SerialPort
 {
 private:
